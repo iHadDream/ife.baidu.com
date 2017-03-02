@@ -1,0 +1,114 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>IFE JavaScript Task 01</title>
+        <script src="task.js"></script>
+    
+        <style>
+            #container{
+                display: flex;
+                height: 505px;
+                align-items:flex-end;
+            }
+            #container div {
+                 margin: 3px;
+                 width: 15px;
+                 transition:height 500ms;
+            }
+            .red{
+                background-color: red;
+            }
+            .blue{
+                background-color: blue;
+            }
+            .green{
+                background-color: green;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <input   type="text">
+        <input type="button" value="左侧入" id="left-in">
+        <input type="button" value="右侧入" id="right-in"style="margin-right: 25px">
+        <input type="button" value="左侧出" id="left-out">
+        <input type="button" value="右侧出" id="right-out">
+        <button id="sort">排序</button>
+        <button id="random">随机50</button>
+         interval(ms):<input id="renderInterval" value="150"/>
+        <div id="container">
+
+        </div>
+       
+	<script type="text/javascript">
+	 	 $=function (e1){return document.querySelector(e1);};
+
+         $$=function (e1){return document.querySelectorAll(e1);};
+	     var data=[];
+         var sizeFactor =5;//大，大，大
+         var aniQue = delay(function(){},0);//=animationQueue
+         var inAnimation = flase; //true:不要动 ，举起手来
+         var renderInterval = 150; //设成10才是真快感
+
+         /*delay还是queue？*/
+         function delay(fn,t){
+            var queue=[],self,timer;
+            function schudule(fn,t){
+                timer= setTimeout(function(){
+                    timer=null;
+                    fn();
+                    if(queue.length){
+                        var next=queue.shift();
+                        schudule(next.fn,next.t);
+
+                    }
+                },t);
+            }
+            self={
+                delay:function(fn,t){
+                    if(queue.length||timer){
+                        queue.push({fn:fn,t:t});
+                    }else{
+                        schudule(fn,t);
+                    }
+                    return self;
+                },
+                cancel:function(){
+                    clearTimeout(timer);
+                    queue= [];
+                }
+            }
+            return self.delay(fn,t);
+         }
+
+         /*why so quickly*/
+         function sort_partition(left,right){
+            var p = data[left];
+            renderSortRange(left,right,false);
+            while(left<right){
+                renderSort(right);
+                while(left<right&&data[right]>=p){
+                    right--;
+                    renderSort(right);
+                }
+                data[left]=data[right];
+                renderSort(left,data[left]);
+                while(left<right&&data[left]<=p){
+                    left++;
+                    renderSort(left);
+                }
+                data[right]=data[left];
+                renderSort(right,data[right]);
+            }
+            data[right]=data[left];
+            renderSort(right,data[right]);
+         }
+         data[left]=p;
+         renderSort(left,data[left]);
+         renderSortRange(left,right,true);
+         return left;
+     }
+	</script>
+</body>
+</html>
