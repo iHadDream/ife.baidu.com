@@ -1,0 +1,131 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 18</title>
+    <style>
+    li{
+        display:inline-block;
+        color:#FFF;
+        padding: 4px;
+        padding-top:5px;
+        margin:2px;
+        width: 12px;
+        font-size: 8;
+        text-align: center;
+        }
+        ul{
+            display: flex;
+            height: 180px;
+            align-items: flex-end;
+            justify-content: flex-start;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<input type="text" id="inputbox"/>
+<button id="leftin">左侧入</button>
+<button id="rightin">右侧入</button>
+<button id="leftout">左侧出</button>
+<button id="rightout">右侧出</button>
+<button id="random">随机生成一组数据</button>
+<button id="sortdata">排序</button>
+<br/>
+<ul id="list">
+</ul>
+<script>
+    //考虑到下一个任务有排序,则使用数组存放数据,使用字符串刷新的方式更新数据
+    var data=[];//定义存放数据的数组
+    var str="";//定义更新UL的字符串
+    var container=document.getElementById("list");
+    //随机颜色
+    function rancolor(){
+        var colorstr=["#FF4D00","#FFBF00","#00FFFF","#66FF00","#6495ED","#DA70D6","#C0C0C0","#8CE600","#FF8C69","#00FA9A"];
+        var i=Math.floor(Math.random()*10);
+        return colorstr[i];}
+    //数据更新函数
+    function updata(){
+        container.innerHTML="";
+        for(i=0;i<=data.length-1;i++){
+            var lielement=document.createElement("li");
+            lielement.innerText=data[i];
+            lielement.style.height=data[i]*1.6;
+            lielement.style.backgroundColor=rancolor();
+            lielement.setAttribute("id","li-"+i);
+            container.appendChild(lielement);
+        }
+        document.getElementById("inputbox").value="";
+    }
+    //输入并处理数据的函数
+    function inputnum(){
+        input=document.getElementById("inputbox").value.trim();
+        if(data.length>=60){alert("数据已满");return 0;}
+        if(input>=100||input<=10){alert("输入不合法");return 0;}
+        if(input==""){alert("输入不合法");return 0;}
+        if(isNaN(input)){alert("输入不合法");return 0;}
+    }
+    //时间绑定与处理
+    var lin=document.getElementById("leftin").onclick=function(){
+            //若输入不合法则跳出函数
+            if(inputnum()==0)return;
+            data.splice(0,0,input);
+            updata();
+        };
+    var rin=document.getElementById("rightin").onclick=function(){
+            if(inputnum()==0)return;
+            data.push(input);
+            updata();
+        };
+    var rout=document.getElementById("rightout").onclick=function(){
+            alert(data.pop());
+            updata();
+        };
+    var lout=document.getElementById("leftout").onclick=function(){
+            alert(data.splice(0,1));
+            updata();
+        };
+    //下面是点击删除的代码
+    container.addEventListener("click",function(e) {
+        if(e.target.nodeName!="LI")return;//若点击的不是LI标签,则返回
+        liid = parseInt(e.target.getAttribute("id").substr(3));
+        console.log(liid);
+        data.splice(liid,1);
+        updata();
+    });
+    //随机生成数据
+    document.getElementById("random").onclick=function(){
+        for(i=0;i<=50;i++){
+            data[i]=Math.floor(Math.random()*91+9);
+        }
+        updata();
+    };
+    //排序算法
+    document.getElementById("sortdata").onclick=function(){
+        var i = 0,j = 1,temp;
+                len = data.length;
+                timer = null;
+        timer = setInterval(run,25);
+        function run() {
+            if (i < len) {
+                if (j < len) {
+                    if (data[i] > data[j]) {
+                        temp = data[i];
+                        data[i] = data[j];
+                        data[j] = temp;
+                        updata();
+                    }
+                    j++;
+                } else {
+                    i++;
+                    j = i + 1;
+                }
+            } else {
+                clearInterval(timer);
+                return;
+            }
+        }
+    }
+</script>
+</body>
+</html>
